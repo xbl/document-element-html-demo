@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="./define-component.js"></script>
+    <script>
+    class MyDom {
+        get tagName() {
+            return 'my-abc';
+        };
+
+        static get observedAttributes() {
+            return ['country'];
+        };
+
+        data() {
+            return {
+                name: '谢小呆',
+                age: 2,
+                children: {
+                    name: 'hello',
+                    age: 1
+                }
+            };
+        }
+
+        get template() {
+            return `
+                <div>
+                    <h3>hi {{ name }} age: {{ age + 1}}</h3>
+                    <ul>
+                        <li>age: {{ age + 1}}</li>
+                        <li><button @click='sub'>-</button><button @click='add'>+</button></li>
+                        <li>children.name: {{ children.name }}</li>
+                        <li>children.age: {{ children.age < 2 ? 'A': 'B' }}</li>
+                        <li><button @click='subChildrenAge'>-</button><button @click='addChildrenAge'>+</button></li>
+                        <li><button @click='changeName'> change name !</button></li>
+                        <li><button @click='changeName2'> change name !</button></li>
+                    </ul>
+                </div>
+            `;
+        };
+        
+        get methods() {
+            return {
+                add: function() {
+                    this.data.age++;
+                },
+                sub: function() {
+                    this.data.age--;
+                },
+                changeName: function() {
+                    this.data.name = 'hello!'
+                },
+                changeName2: function() {
+                    this.data.children.name = 'helloABC!'
+                },
+                addChildrenAge: function() {
+                    this.data.children.age++;
+                    console.log(this.data.children)
+                    // obj.data.children.age++
+                },
+                subChildrenAge: function() {
+                    // this.data.children.age--;
+                    // obj.data.children.age--
+                    console.log(this.data)
+                },
+            }
+        }
+
+        attributeChangedCallback(name, oldValue, newValue) {
+            console.log(name + ':' + newValue);
+        };
+    }
+
+    defineComponent(MyDom);
+
+    const obj = {
+        data: {
+            name: '谢小呆',
+            age: 2,
+            children: {
+                name: 'hello',
+                age: 1
+            }
+        }
+    };
+
+    
+    const register = function(obj) {
+        Object.keys(obj).forEach((protoName) => {
+            obj['_' + protoName] = obj[protoName];
+
+            Object.defineProperty(obj, protoName, {
+                set: function(newVal) {
+                    obj['_' + protoName] = newVal;
+                    console.log(newVal);
+                },
+                get: function() {
+                    return obj['_' + protoName];
+                },
+                enumerable: true,
+                configurable: true
+            });
+            if(obj[protoName] instanceof Object)
+                register(obj[protoName]);
+        });
+    };
+    register(obj.data);
+    obj.data.children.age = 3
+    console.log(obj.data.children);
+    </script>
+</head>
+<body>
+    <my-dom country="123"></my-dom>
+    <my-abc country="123565555"></my-abc>
+</body>
+</html>
