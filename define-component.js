@@ -68,23 +68,17 @@
                         const evalFn = new Function(`{${keys}}`, `return ${expression}`);
                         resultStr = resultStr.replace(match, evalFn(context.data));
                     });
-                    node.nodeValue = resultStr;
+                    if(node.nodeValue !== resultStr)
+                        node.nodeValue = resultStr;
                 };
                 refreshDom();
-                protoNameArr.forEach((protoName) => {
-                    // if (!expression.includes(protoName)) return ;
-                    let refreshDomArr = watcher[protoName];
-                    if(!refreshDomArr) {
-                        refreshDomArr = watcher[protoName] = [];
-                    }
-                    refreshDomArr.push(refreshDom);
-                });
+                watcher.push(refreshDom);
             }
             watcherData(node, context);
         });
     };
     
-    const watcher = {};
+    const watcher = [];
     
     const registerDefineProperty = function(context) {
         Object.keys(context.data()).forEach((protoName) => {
@@ -92,15 +86,11 @@
             Object.defineProperty(context.data, protoName, {
                 set: function(newVal) {
                     if (context.data['_' + protoName] === newVal) return;
-                    console.log(newVal)
                     context.data['_' + protoName] = newVal;
                     // newVal is Object
                     if(newVal instanceof Object)
                         register(newVal);
-                    const refreshDomArr = watcher[protoName];
-                    if(!refreshDomArr)
-                        return ;
-                    refreshDomArr.forEach((callback) => callback());
+                    watcher.forEach((callback) => callback());
 
                 },
                 get: function() {
@@ -122,7 +112,7 @@
                 set: function(newVal) {
                     if (obj['_' + protoName] === newVal) return;
                     obj['_' + protoName] = newVal;
-                    console.log(newVal);
+                    watcher.forEach((callback) => callback());
                 },
                 get: function() {
                     return obj['_' + protoName];
