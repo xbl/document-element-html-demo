@@ -53,32 +53,32 @@
         });
     };
     
-    const strTemplateRegExp = /{{(.*)}}/g;
+    const strTemplateRegExp = /\{\{((?:.|\n)+?)\}\}/g;
     
     const watcherData = function(documentFragment, context) {
         documentFragment.childNodes.forEach((node) => {
             if (node.nodeType === Node.TEXT_NODE) {
                 const strTemplate = node.nodeValue;
-                if (strTemplateRegExp.test(strTemplate)) {
-                    strTemplate.replace(strTemplateRegExp, function(match, expression) {
-                        console.log(arguments)
-                        const protoNameArr = Object.keys(context.data);
+                if (!strTemplateRegExp.test(strTemplate)) return;
+                const protoNameArr = Object.keys(context.data);
+                const refreshDom = function () {
+                    let resultStr = strTemplate;
+                    resultStr.replace(strTemplateRegExp, function(match, expression) {
                         const keys = protoNameArr.join(',');
                         const evalFn = new Function(`{${keys}}`, `return ${expression}`);
-                        const refreshDom = function () {
-                            node.nodeValue = strTemplate.replace(match, evalFn(context.data));
-                        };
-                        refreshDom();
-                        protoNameArr.forEach((protoName) => {
-                            if (!expression.includes(protoName)) return ;
-                            let refreshDomArr = watcher[protoName];
-                            if(!refreshDomArr) {
-                                refreshDomArr = watcher[protoName] = [];
-                            }
-                            refreshDomArr.push(refreshDom);
-                        });
+                        resultStr = resultStr.replace(match, evalFn(context.data));
                     });
-                }
+                    node.nodeValue = resultStr;
+                };
+                refreshDom();
+                protoNameArr.forEach((protoName) => {
+                    // if (!expression.includes(protoName)) return ;
+                    let refreshDomArr = watcher[protoName];
+                    if(!refreshDomArr) {
+                        refreshDomArr = watcher[protoName] = [];
+                    }
+                    refreshDomArr.push(refreshDom);
+                });
             }
             watcherData(node, context);
         });
