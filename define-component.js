@@ -1,20 +1,20 @@
 (function(window) {
     const defineComponent = function (componentClazz) {
         const ElementTemplate = class extends HTMLElement {}
-        const dom = new componentClazz();
+        const vm = new componentClazz();
         ElementTemplate.prototype.connectedCallback = function() {
-            const documentFlagment = strToHtml(dom.template.trim());
-            registerDefineProperty(dom);
-            watcherData(documentFlagment, dom);
+            const documentFlagment = strToHtml(vm.template.trim());
+            registerDefineProperty(vm);
+            registerDom(documentFlagment, vm);
             this.appendChild(documentFlagment);
-            bindEvent(this, dom);
+            bindEvent(this, vm);
         }
-    
-        ElementTemplate.observedAttributes = componentClazz.observedAttributes;
+        const attrs = Object.keys(vm.props);
+        ElementTemplate.observedAttributes = attrs;
         ElementTemplate.prototype.attributeChangedCallback = function() {
-            dom.attributeChangedCallback.apply(this, arguments);
+            vm.attributeChangedCallback.apply(this, arguments);
         }
-        const tagName = dom.tagName || getTagNameByClazzName(componentClazz.name);
+        const tagName = vm.tagName || getTagNameByClazzName(componentClazz.name);
         customElements.define(tagName, ElementTemplate);
     };
     
@@ -55,7 +55,7 @@
     
     const strTemplateRegExp = /\{\{((?:.|\n)+?)\}\}/g;
     
-    const watcherData = function(documentFragment, context) {
+    const registerDom = function(documentFragment, context) {
         documentFragment.childNodes.forEach((node) => {
             if (node.nodeType === Node.TEXT_NODE) {
                 const strTemplate = node.nodeValue;
@@ -74,7 +74,7 @@
                 refreshDom();
                 watcher.push(refreshDom);
             }
-            watcherData(node, context);
+            registerDom(node, context);
         });
     };
     

@@ -7,6 +7,7 @@
     <title>Document</title>
     <script src="./define-component.js"></script>
     <script>
+        window.abc = 123;
     class MyDom {
         get tagName() {
             return 'my-abc';
@@ -16,10 +17,17 @@
             return ['country'];
         };
 
+        get props() {
+            return {
+                abc: String
+            }
+        }
+
         data() {
             return {
                 name: '谢小呆',
                 age: 2,
+                abc: 7777,
                 children: {
                     name: 'hello',
                     age: 1
@@ -30,7 +38,7 @@
         get template() {
             return `
                 <div>
-                    <h3>hi {{ name }} age: {{ age + 1}}</h3>
+                    <h3>hi {{ name }} age: {{ age + 1 }} {{ abc }}</h3>
                     <ul>
                         <li>age: {{ age + 1}}</li>
                         <li><button @click='sub'>-</button><button @click='add'>+</button></li>
@@ -77,6 +85,6 @@
 </head>
 <body>
     <my-dom country="123"></my-dom>
-    <my-abc country="123565555"></my-abc>
+    <my-abc country="123565555" abc='abc-123'></my-abc>
 </body>
 </html>
