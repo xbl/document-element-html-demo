@@ -1,3 +1,4 @@
+// Deprecated
 var MyElement = document.registerElement("my-element", {
   prototype: Object.create(HTMLElement.prototype, {
     createdCallback: {
