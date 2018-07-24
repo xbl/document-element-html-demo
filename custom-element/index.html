@@ -1,11 +1,40 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>testing my-element</title>
-  <script src="./my-element.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script>
+    class MyDom extends HTMLElement {
+        connectedCallback() {
+            this.innerHTML = '<h1>hello custom elements</h1>';
+        }
+
+        disconnectedCallback() {
+            console.log('Custom square element removed from page.');
+        }
+        
+        adoptedCallback() {
+            console.log('Custom square element moved to new page.');
+        }
+
+        static get observedAttributes() {
+            return ['country'];
+        }
+
+        attributeChangedCallback(name, oldValue, newValue) {
+            console.log(name + ':' + newValue);
+        }
+    }
+
+    customElements.define('my-dom', MyDom);
+    // var md = new MyDom();
+    // md.setAttribute('test', 'nope');
+    // md.setAttribute('country', 'UK'); 
+    </script>
 </head>
 <body>
-  <my-element>
-    some content
-  </my-element>
+    <my-dom country="China"></my-dom>
 </body>
+</html>
