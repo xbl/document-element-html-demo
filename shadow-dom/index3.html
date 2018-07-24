@@ -4,11 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>customElements</title>
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/webcomponentsjs/2.0.2/webcomponents-bundle.js"></script>
+    <style>
+    h1{ color: red; }
+    </style>
     <script>
     class MyDom extends HTMLElement {
         connectedCallback() {
-            this.innerHTML = '<h1>hello custom elements</h1>';
+            var shadow = this.attachShadow({mode: 'closed'});
+            var title = document.createElement('h1');
+            title.textContent = 'Hello Shadow dom!';
+            shadow.appendChild(title);
+
+            var style = document.createElement('style');
+            style.textContent = `:host h1{ color: green; }`;
+            shadow.appendChild(style);
         }
 
         disconnectedCallback() {
@@ -29,12 +40,10 @@
     }
 
     customElements.define('my-dom', MyDom);
-    // var md = new MyDom();
-    // md.setAttribute('test', 'nope');
-    // md.setAttribute('country', 'UK'); 
     </script>
 </head>
 <body>
-    <my-dom country="China"></my-dom>
+    <h1>我不是shadow dom</h1>
+    <my-dom></my-dom>
 </body>
 </html>

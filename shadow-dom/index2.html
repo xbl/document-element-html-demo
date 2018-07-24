@@ -12,14 +12,10 @@
     <script>
     class MyDom extends HTMLElement {
         connectedCallback() {
-            var shadow = this.attachShadow({mode: 'open'});
+            var shadow = this.attachShadow({mode: 'closed'});
             var title = document.createElement('h1');
             title.textContent = 'Hello Shadow dom!';
             shadow.appendChild(title);
-
-            var style = document.createElement('style');
-            style.textContent = `:host h1{ color: green; }`;
-            shadow.appendChild(style);
         }
 
         disconnectedCallback() {
