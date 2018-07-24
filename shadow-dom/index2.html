@@ -5,10 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/webcomponentsjs/2.0.2/webcomponents-bundle.js"></script>
-    <style>
-    h1{ color: red; }
-    </style>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/webcomponentsjs/2.0.2/webcomponents-bundle.js"></script> -->
     <script>
     class MyDom extends HTMLElement {
         connectedCallback() {
@@ -39,6 +36,9 @@
     </script>
 </head>
 <body>
+    <style>
+        h1{ color: red; }
+    </style>
     <h1>我不是shadow dom</h1>
     <my-dom></my-dom>
 </body>
