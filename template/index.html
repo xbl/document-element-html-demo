@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <table>
+        <thead>
+            <tr>
+                <td>name</td>
+                <td>age</td>
+            </tr>
+        </thead>
+        <tbody id="producttable">
+            <!-- 目标 -->
+        </tbody>
+    </table>
+    
+    <template id="productrow">
+        <tr>
+            <td>谢小呆</td>
+            <td>18</td>
+        </tr>
+    </template>
+    <script>
+        var template = document.getElementById('productrow'),
+            producttable = document.getElementById('producttable');
+        producttable.appendChild(template.content);
+    </script>
+</body>
+</html>
