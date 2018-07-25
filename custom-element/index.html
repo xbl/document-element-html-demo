@@ -35,6 +35,14 @@
     </script>
 </head>
 <body>
-    <my-dom country="China"></my-dom>
+    <my-dom country="China" id='customDom'></my-dom>
+    <button id='removeBtn'>remove</button>
+    <script>
+        var customDom = document.getElementById('customDom'),
+            removeBtn = document.getElementById('removeBtn');
+        removeBtn.addEventListener('click', function () {
+            customDom.parentNode.removeChild(customDom);
+        });
+    </script>
 </body>
 </html>
